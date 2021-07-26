@@ -34,6 +34,13 @@ const useStyles = makeStyles((theme) => ({
 	loader: {
 		color: 'white',
 	},
+	profileButton: {
+		marginRight: 10,
+	},
+	copy: {
+		marginRight: 10,
+		color: '#ff9800',
+	},
 }));
 
 export default useStyles;

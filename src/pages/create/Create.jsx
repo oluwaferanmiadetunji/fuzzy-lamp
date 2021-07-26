@@ -13,6 +13,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 import useStyles from './styles';
 import { ROUTES, USER } from 'utils/constants';
@@ -28,6 +31,17 @@ export default function SignIn() {
 	const [lastName, setLastName] = useState('');
 	const [gender, setGender] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [message, setMessage] = useState('');
+	const [staffID, setStaffID] = useState('');
+
+	const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setOpen(false);
+	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -40,14 +54,29 @@ export default function SignIn() {
 		if (error) {
 			toastify('danger', 'Unable to become a staff! Please, try again later');
 		} else {
+			setOpen(true);
+			setStaffID(data.data._id);
+			setMessage(`Your Staff ID is: ${data.data._id}`);
+			setFirstName('');
+			setLastName('');
+			setGender('');
 			setTimeout(() => {
 				setItem(USER, data.data);
-				history.push(ROUTES.LOGIN);
 				toastify('success', 'Successfully became a staff');
 			}, 500);
 		}
 
 		setLoading(false);
+	};
+
+	const copyToClipboard = () => {
+		const el = document.createElement('textarea');
+		el.value = staffID;
+		document.body.appendChild(el);
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+		toastify('info', 'Successfully copied Staff ID to clipboard');
 	};
 
 	return (
@@ -118,10 +147,43 @@ export default function SignIn() {
 						<Grid item>
 							Already a staff?
 							<Link href={ROUTES.LOGIN} className={classes.link} variant='body2'>
-							Clock In
+								Clock In
 							</Link>
 						</Grid>
 					</Grid>
+
+					<Snackbar
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'left',
+						}}
+						open={open}
+						onClose={handleClose}
+						message={message}
+						action={
+							<>
+								<Button
+									color='success.main'
+									size='small'
+									className={classes.copy}
+									onClick={copyToClipboard}>
+									Copy Staff ID
+								</Button>
+
+								<Button
+									color='secondary'
+									size='small'
+									className={classes.profileButton}
+									onClick={() => history.push(ROUTES.LOGIN)}>
+									Check Profile
+								</Button>
+
+								<IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
+									<CloseIcon fontSize='small' />
+								</IconButton>
+							</>
+						}
+					/>
 				</form>
 			</div>
 		</Container>

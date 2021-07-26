@@ -9,7 +9,7 @@ import useStyles from './style';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { USER } from 'utils/constants';
-import { makePostRequest } from 'utils/api';
+import { makePutRequest } from 'utils/api';
 import toastify from 'utils/toast';
 import { setItem, getItem } from 'utils/storage';
 
@@ -17,8 +17,8 @@ export default function FormDialog() {
 	const classes = useStyles();
 	const user = getItem(USER);
 	const [open, setOpen] = useState(false);
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
+	const [firstName, setFirstName] = useState(user?.firstName || '');
+	const [lastName, setLastName] = useState(user?.lastName || '');
 	const [loading, setLoading] = useState(false);
 
 	const handleClickOpen = () => {
@@ -32,8 +32,8 @@ export default function FormDialog() {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		setLoading(true);
-		const { error } = await makePostRequest({
-			path: '/staff/create',
+		const { error } = await makePutRequest({
+			path: `/staff/${user?._id}`,
 			payload: { firstName, lastName },
 		});
 
