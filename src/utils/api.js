@@ -21,19 +21,9 @@ export const makeGetRequest = async (path) => {
 	}
 };
 
-export const makePatchRequest = async ({ path, payload }) => {
+export const makePutRequest = async ({ path, payload }) => {
 	try {
-		const { data, status } = await axios.patch(API_URL + path, payload);
-		return { status, data, error: false };
-	} catch (error) {
-		const { status, data } = error.response;
-		return { status, data, error: true };
-	}
-};
-
-export const makeDeleteRequest = async (path) => {
-	try {
-		const { data, status } = await axios.delete(API_URL + path);
+		const { data, status } = await axios.put(API_URL + path, payload);
 		return { status, data, error: false };
 	} catch (error) {
 		const { status, data } = error.response;
