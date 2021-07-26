@@ -18,13 +18,17 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 	},
 	form: {
-		width: '100%',
+		width: 400,
 		marginTop: theme.spacing(1),
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
 	link: {
+		marginLeft: 10,
+	},
+	loader: {
+		color: 'white',
 		marginLeft: 10,
 	},
 }));

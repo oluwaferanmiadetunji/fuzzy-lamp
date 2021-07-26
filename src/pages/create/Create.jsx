@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -12,33 +13,21 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 
 import useStyles from './styles';
-import { ROUTES } from 'utils/constants';
+import { ROUTES, USER } from 'utils/constants';
 import { makePostRequest } from 'utils/api';
-
-function Alert(props) {
-	return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
+import toastify from 'utils/toast';
+import { setItem } from 'utils/storage';
 
 export default function SignIn() {
 	const classes = useStyles();
+	const history = useHistory();
 
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [gender, setGender] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [open, setOpen] = useState(false);
-
-	const handleClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-
-		setOpen(false);
-	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -47,8 +36,17 @@ export default function SignIn() {
 			path: '/staff/create',
 			payload: { firstName, lastName, gender },
 		});
-		console.log(data, error);
-        setOpen(true)
+
+		if (error) {
+			toastify('danger', 'Unable to become a staff! Please, try again later');
+		} else {
+			setTimeout(() => {
+				setItem(USER, data.data);
+				history.push(ROUTES.LOGIN);
+				toastify('success', 'Successfully became a staff');
+			}, 500);
+		}
+
 		setLoading(false);
 	};
 
@@ -92,7 +90,7 @@ export default function SignIn() {
 					/>
 
 					<FormControl variant='outlined' className={classes.formControl}>
-						<InputLabel>Age</InputLabel>
+						<InputLabel>Gender</InputLabel>
 						<Select
 							value={gender}
 							onChange={(event) => setGender(event.target.value)}
@@ -120,17 +118,11 @@ export default function SignIn() {
 						<Grid item>
 							Already a staff?
 							<Link href={ROUTES.LOGIN} className={classes.link} variant='body2'>
-								Check In
+							Clock In
 							</Link>
 						</Grid>
 					</Grid>
 				</form>
-
-				<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-					<Alert onClose={handleClose} severity='success'>
-						This is a success message!
-					</Alert>
-				</Snackbar>
 			</div>
 		</Container>
 	);

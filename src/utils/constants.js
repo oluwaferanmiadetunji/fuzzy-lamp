@@ -5,3 +5,5 @@ export const ROUTES = {
 };
 
 export const API_URL = 'https://releaf-service.herokuapp.com/api';
+
+export const USER = 'USER';
