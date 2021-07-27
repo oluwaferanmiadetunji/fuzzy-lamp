@@ -8,7 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './style';
 import { getItem, deleteItem } from 'utils/storage';
 import { ROUTES, USER } from 'utils/constants';
-import { makePutRequest } from 'utils/api';
+import { makePatchRequest } from 'utils/api';
 import toastify from 'utils/toast';
 
 export default function ButtonAppBar() {
@@ -19,7 +19,8 @@ export default function ButtonAppBar() {
 
 	const clockOut = async () => {
 		setLoading(true);
-		const { error } = await makePutRequest({
+		
+		const { error } = await makePatchRequest({
 			path: `/log/check-out/${staffID}`,
 		});
 

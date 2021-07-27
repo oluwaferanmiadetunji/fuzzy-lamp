@@ -9,7 +9,7 @@ import useStyles from './style';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { USER } from 'utils/constants';
-import { makePutRequest } from 'utils/api';
+import { makePatchRequest } from 'utils/api';
 import toastify from 'utils/toast';
 import { setItem, getItem } from 'utils/storage';
 
@@ -32,16 +32,20 @@ export default function FormDialog() {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		setLoading(true);
-		const { error } = await makePutRequest({
-			path: `/staff/${user?._id}`,
+		
+		const { error } = await makePatchRequest({
+			path: `/staff/${user?.staffId}`,
 			payload: { firstName, lastName },
 		});
 
 		if (error) {
-			toastify('danger', 'Unable to become a staff! Please, try again later');
+			toastify('danger', 'Unable to update profile! Please, try again later');
 		} else {
-			toastify('success', 'Successfully became a staff');
+			toastify('success', 'Successfully updated profile');
 			setItem(USER, { ...user, firstName, lastName });
+			setTimeout(() => {
+				window.location.reload();
+			}, 500);
 		}
 
 		setLoading(false);
@@ -56,7 +60,7 @@ export default function FormDialog() {
 			<Dialog open={open} maxWidth='sm' fullWidth onClose={handleClose} aria-labelledby='form-dialog-title'>
 				<DialogTitle id='form-dialog-title'>Update Your Profile</DialogTitle>
 				<DialogContent>
-					<form className={classes.form} onSubmit={handleSubmit}>
+					<form onSubmit={handleSubmit}>
 						<TextField
 							variant='outlined'
 							margin='normal'
@@ -90,12 +94,12 @@ export default function FormDialog() {
 					<Button onClick={handleClose} color='primary'>
 						Cancel
 					</Button>
-					<Button onClick={handleSubmit} variant='contained' color='primary'>
-						{loading ? (
-							<CircularProgress color='inherit' className={classes.loader} size={20} />
-						) : (
-							'Become a Staff'
-						)}
+					<Button
+						disabled={!firstName || !lastName}
+						onClick={handleSubmit}
+						variant='contained'
+						color='primary'>
+						{loading ? <CircularProgress color='inherit' className={classes.loader} size={20} /> : 'Update'}
 					</Button>
 				</DialogActions>
 			</Dialog>

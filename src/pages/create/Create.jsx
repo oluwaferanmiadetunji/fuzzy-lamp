@@ -55,8 +55,8 @@ export default function SignIn() {
 			toastify('danger', 'Unable to become a staff! Please, try again later');
 		} else {
 			setOpen(true);
-			setStaffID(data.data._id);
-			setMessage(`Your Staff ID is: ${data.data._id}`);
+			setStaffID(data.data.staffId);
+			setMessage(`Your Staff ID is: ${data.data.staffId}`);
 			setFirstName('');
 			setLastName('');
 			setGender('');
