@@ -1,0 +1,14 @@
+{
+	"status": true,
+	"message": "staff creation successful",
+	"data": {
+		"status": "ACTIVE",
+		"_id": "6105396934a77900154068f2",
+		"firstName": "Henry",
+		"lastName": "Veda",
+		"gender": "MALE",
+		"staffId": 17,
+		"createdAt": "2021-07-31T11:52:09.529Z",
+		"__v": 0
+	}
+}

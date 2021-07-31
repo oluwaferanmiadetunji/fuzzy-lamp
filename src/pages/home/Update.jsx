@@ -9,7 +9,7 @@ import useStyles from './style';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { USER } from 'utils/constants';
-import { makePatchRequest } from 'utils/api';
+import { makePostRequest } from 'utils/api';
 import toastify from 'utils/toast';
 import { setItem, getItem } from 'utils/storage';
 
@@ -25,6 +25,8 @@ export default function FormDialog() {
 		setOpen(true);
 	};
 
+	console.log(user);
+
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -32,8 +34,14 @@ export default function FormDialog() {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		setLoading(true);
-		
-		const { error } = await makePatchRequest({
+
+		toastify('success', 'Successfully updated profile');
+		setItem(USER, { ...user, firstName, lastName });
+		setTimeout(() => {
+			window.location.reload();
+		}, 500);
+
+		const { error } = await makePostRequest({
 			path: `/staff/${user?.staffId}`,
 			payload: { firstName, lastName },
 		});
