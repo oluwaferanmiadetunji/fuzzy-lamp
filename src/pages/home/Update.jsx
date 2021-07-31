@@ -9,7 +9,6 @@ import useStyles from './style';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { USER } from 'utils/constants';
-import { makePostRequest } from 'utils/api';
 import toastify from 'utils/toast';
 import { setItem, getItem } from 'utils/storage';
 
@@ -25,8 +24,6 @@ export default function FormDialog() {
 		setOpen(true);
 	};
 
-	console.log(user);
-
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -35,26 +32,11 @@ export default function FormDialog() {
 		event.preventDefault();
 		setLoading(true);
 
-		toastify('success', 'Successfully updated profile');
-		setItem(USER, { ...user, firstName, lastName });
 		setTimeout(() => {
-			window.location.reload();
-		}, 500);
-
-		const { error } = await makePostRequest({
-			path: `/staff/${user?.staffId}`,
-			payload: { firstName, lastName },
-		});
-
-		if (error) {
-			toastify('danger', 'Unable to update profile! Please, try again later');
-		} else {
 			toastify('success', 'Successfully updated profile');
 			setItem(USER, { ...user, firstName, lastName });
-			setTimeout(() => {
-				window.location.reload();
-			}, 500);
-		}
+			window.location.reload();
+		}, 1000);
 
 		setLoading(false);
 	};
